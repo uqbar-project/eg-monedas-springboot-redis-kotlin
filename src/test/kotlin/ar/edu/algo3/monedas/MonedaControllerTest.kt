@@ -19,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.math.BigDecimal
-import org.mockito.verification.After
-import redis.embedded.RedisServer
 
 
 @SpringBootTest
@@ -31,23 +29,7 @@ class MonedaControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
-    @Autowired
-    lateinit var redisTemplate: RedisTemplate<String, String>
-
-    lateinit var redisServer: RedisServer
-
     val mapper = ObjectMapper()
-
-    @BeforeEach
-    fun setup() {
-        redisServer = RedisServer.builder().port(6370).build()
-        redisServer.start()
-    }
-
-    @AfterEach
-    fun tearDown(){
-        redisServer.stop()
-    }
 
     @Test
     @DisplayName("podemos convertir de una moneda a pesos")
