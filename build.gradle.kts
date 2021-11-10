@@ -30,7 +30,13 @@ dependencies {
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
     implementation("org.springframework.boot:spring-boot-devtools:2.5.6")
+    testImplementation("it.ozimov:embedded-redis:0.7.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.6")
+}
+
+// Eliminamos el logger duplicado
+configurations.all {
+    exclude(group="org.slf4j", module="slf4j-simple")
 }
 
 tasks.withType<KotlinCompile> {
