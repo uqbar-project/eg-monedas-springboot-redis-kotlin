@@ -1,6 +1,6 @@
 # Ejemplo Monedas con Springboot y Redis
 
-
+[![build](https://github.com/uqbar-project/eg-monedas-springboot-redis-kotlin/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-monedas-springboot-redis-kotlin/actions/workflows/build.yml) 
 
 ## Levantar Redis localmente
 
