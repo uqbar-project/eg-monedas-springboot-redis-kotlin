@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.math.BigDecimal
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")

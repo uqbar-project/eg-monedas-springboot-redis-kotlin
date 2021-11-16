@@ -51,15 +51,14 @@ Eso te permitirá crear las claves para monedas como euro, dólar y peso y visua
 
 Nuestro modelo en Springboot no va a trabajar con los datos iniciales que generamos en Node, sino que va a tener una estructura más **opaca**, determinada por las annotations de nuestro objeto de dominio Moneda:
 
-```xtend
+```kt
 @RedisHash("Moneda")
-@Accessors
 class Moneda {
-	@JsonIgnore
-	BigDecimal cotizacionMoneda
-	
-	@Id
-	String descripcion
+    @JsonIgnore
+    lateinit var cotizacionMoneda: BigDecimal
+
+    @Id
+    lateinit var descripcion: String
 ```
 
 - `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de valores en Redis
@@ -69,11 +68,32 @@ class Moneda {
 
 La interfaz que propone Spring boot con Redis es idéntica a la del modelo relacional (aun cuando su implementación es bastante diferente):
 
-```xtend
-interface MonedasRepository extends CrudRepository<Moneda, String> {}
+```kt
+interface MonedaRepository : CrudRepository<Moneda, String> {}
 ```
 
 Como la interfaz ya propone `findAll` y `findById` que es lo que queremos hacer, no tenemos que definir mensajes adicionales.
+
+### Service
+
+El service define dos métodos de conversión:
+
+```kt
+protected fun getMoneda(conversion: Conversion) =
+    monedasRepository
+        .findById(conversion.monedaAConvertir)
+        .orElseThrow { NotFoundException("La moneda a convertir no existe") }
+
+@Transactional(readOnly = true)
+fun convertirMonedaAPesos(conversion: Conversion) =
+    getMoneda(conversion).convertirAPesos(conversion.valorAConvertir)
+
+@Transactional(readOnly = true)
+fun convertirPesosAMoneda(conversion: Conversion) =
+    getMoneda(conversion).convertirDePesosAMoneda(conversion.valorAConvertir)
+```
+
+La anotación `@Transactional(readOnly = true)` indica al service que no debe iniciar una transacción. De esa manera utiliza menos recursos.
 
 ### Controller
 
@@ -87,20 +107,10 @@ El primer endpoint se implementa con un método GET, los otros dos si bien no ti
 
 La implementación de la búsqueda de todas las monedas delega a un service de Springboot:
 
-```xtend
-	@GetMapping("/monedas")
-	@ApiOperation("Recupera información de los valores de cada moneda.")
-	def getMonedas() {
-		monedasService.getMonedas()
-	}
-```
-
-El service no tiene demasiada responsabilidad en este caso, solo delega al repositorio:
-
-```xtend
-	def getMonedas() {
-		this.monedasRepository.findAll
-	}
+```kt
+@GetMapping("/monedas")
+@ApiOperation("Recupera información de los valores de cada moneda.")
+fun getMonedas() = monedaService.getMonedas()
 ```
 
 Tampoco es muy complejo el endpoint de conversión, solo que
@@ -111,46 +121,30 @@ Tampoco es muy complejo el endpoint de conversión, solo que
 
 En el controller:
 
-```xtend
-	@PutMapping("/monedaAPesos/")
-	@ApiOperation("Convierte un valor de una moneda determinada a pesos. Para conocer la lista de monedas disponibles tenés el endpoint /GET. Se distinguen mayúsculas de minúsculas. Ejemplo: si 1 zloty está 24 pesos, al convertir 10 zlotys obtendremos 240 pesos.")
-	def getMonedasAPesos(@RequestBody Conversion conversion) {
-		monedasService.convertirMonedaAPesos(conversion)
-	}
+```kt
+@PutMapping("/monedaAPesos")
+@ApiOperation("Convierte un valor de una moneda determinada a pesos. Para conocer la lista de monedas disponibles tenés el endpoint /GET. Se distinguen mayúsculas de minúsculas. Ejemplo: si 1 zloty está 24 pesos, al convertir 10 zlotys obtendremos 240 pesos.")
+fun getMonedasAPesos(@RequestBody conversion: Conversion) =
+    monedaService.convertirMonedaAPesos(conversion)
 ```
 
-En el service:
-
-```xtend
-	protected def Moneda getMoneda(Conversion conversion) {
-		monedasRepository
-			.findById(conversion.monedaAConvertir)
-			.orElseThrow [ new NotFoundException("La moneda a convertir no existe") ]
-	}
-	
-	def convertirMonedaAPesos(ar.edu.unsam.monedas.dto.Conversion conversion) {
-		conversion.moneda.convertirAPesos(conversion.valorAConvertir)
-	}
-```
-
-Recordemos que `conversion.moneda` es un shortcut del extension method `getMoneda` que toma como parámetro un objeto conversión. La conversión es un objeto que sirve para capturar los parámetros necesarios para convertir de una moneda a pesos o viceversa.
+La implementación del service ya la hemos presentado.
 
 Por último, en el archivo `ErrorHandling.xtend` definimos la asociación de la excepción con un código de error http:
 
-```xtend
-@ResponseStatus(NOT_FOUND)
-class NotFoundException extends RuntimeException {
+```kt
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class NotFoundException(override val message: String) : RuntimeException(message)
 
-	new(String message) {
-		super(message)
-	}
-}
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class UserException(override val message: String) : RuntimeException(message)
 ```
-
 
 ### Testeo de integración
 
-Antes que nada hay que levantar el servicio de Redis (vía Docker o en forma local como se cuenta al comienzo del README). Entonces sí podemos ejecutar los tests de integración, que cargan la información de conversión de monedas y verifican:
+Levantar el servicio de Redis antes de ejecutar los tests de integración, algo que también hacemos en el build del CI. 
+
+Los casos de prueba son:
 
 - la conversión de una moneda X a pesos
 - la conversión de pesos a una moneda X
@@ -162,3 +156,24 @@ Los elementos involucrados en el test de integración son:
 - service
 - repositorio
 - objetos de dominio mapeados contra Redis
+
+```kt
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@DisplayName("Dado un controller de monedas")
+class MonedaControllerTest {
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
+    val mapper = ObjectMapper()
+
+    @Test
+    @DisplayName("podemos convertir de una moneda a pesos")
+    fun conversionAPesos() {
+        val conversion = Conversion(BigDecimal(10), "Zloty")
+        val responseEntity = performGet("/monedaAPesos", conversion)
+        assertEquals(HttpStatus.OK.value(), responseEntity.status)
+        assertEquals("240.10", responseEntity.contentAsString)
+    }
+```
