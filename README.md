@@ -177,3 +177,7 @@ class MonedaControllerTest {
         assertEquals("240.10", responseEntity.contentAsString)
     }
 ```
+
+## Cómo testear la aplicación en Insomnia
+
+Te dejamos [el archivo de Insomnia](./Insomnia_Monedas_Redis.json) con ejemplos para probarlo.
