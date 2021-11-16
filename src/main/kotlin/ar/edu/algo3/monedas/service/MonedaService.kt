@@ -18,7 +18,7 @@ class MonedaService {
     protected fun getMoneda(conversion: Conversion) =
         monedasRepository
             .findById(conversion.monedaAConvertir)
-            .orElseThrow { NotFoundException("La moneda a convertir no existe") }
+              .orElseThrow { NotFoundException("La moneda a convertir no existe") }
 
     @Transactional(readOnly = true)
     fun convertirMonedaAPesos(conversion: Conversion) =
