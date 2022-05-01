@@ -172,9 +172,13 @@ class MonedaControllerTest {
     @DisplayName("podemos convertir de una moneda a pesos")
     fun conversionAPesos() {
         val conversion = Conversion(BigDecimal(10), "Zloty")
-        val responseEntity = performGet("/monedaAPesos", conversion)
-        assertEquals(HttpStatus.OK.value(), responseEntity.status)
-        assertEquals("240.10", responseEntity.contentAsString)
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/monedaAPesos).contentType(MediaType.APPLICATION_JSON).content(
+                mapper.writeValueAsString(conversion)
+            )
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("240.1"))
     }
 ```
 

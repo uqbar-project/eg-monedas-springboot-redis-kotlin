@@ -3,18 +3,17 @@ package ar.edu.algo3.monedas
 
 import ar.edu.algo3.monedas.dto.Conversion
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.math.BigDecimal
 
 @SpringBootTest
@@ -31,34 +30,34 @@ class MonedaControllerTest {
     @DisplayName("podemos convertir de una moneda a pesos")
     fun conversionAPesos() {
         val conversion = Conversion(BigDecimal(10), "Zloty")
-        val responseEntity = performGet("/monedaAPesos", conversion)
-        assertEquals(HttpStatus.OK.value(), responseEntity.status)
-        assertEquals("240.10", responseEntity.contentAsString)
+        convertir("/monedaAPesos", conversion)
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("240.1"))
     }
 
     @Test
     @DisplayName("podemos convertir de pesos a una moneda")
     fun conversionAMoneda() {
         val conversion = Conversion(BigDecimal(48.02), "Zloty")
-        val responseEntity = performGet("/pesosAMoneda", conversion)
-        assertEquals(HttpStatus.OK.value(), responseEntity.status)
-        assertEquals("2.00", responseEntity.contentAsString)
+        convertir("/pesosAMoneda", conversion)
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("2.0"))
     }
 
     @Test
     @DisplayName("no podemos convertir de una moneda inexistente")
     fun conversionAMonedaInexistente() {
         val conversion = Conversion(BigDecimal(48.02), "patacones")
-        val responseEntity = performGet("/pesosAMoneda", conversion)
-        assertEquals(HttpStatus.NOT_FOUND.value(), responseEntity.status)
+        convertir("/pesosAMoneda", conversion)
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
     }
 
-    protected fun performGet(url: String, conversion: Conversion): MockHttpServletResponse {
+    protected fun convertir(url: String, conversion: Conversion): ResultActions {
         return mockMvc.perform(
             MockMvcRequestBuilders.put(url).contentType(MediaType.APPLICATION_JSON).content(
                 mapper.writeValueAsString(conversion)
             )
-        ).andReturn().response
+        )
     }
 
 }
