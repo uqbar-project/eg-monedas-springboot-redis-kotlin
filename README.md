@@ -43,6 +43,8 @@ node cargaDatosInicial.js
 
 Eso te permitirá crear las claves para monedas como euro, dólar y peso y visualizarlas en algún cliente como [Redis Commander](https://github.com/joeferner/redis-commander).
 
+Para más información podés ver [este tutorial](https://flaviocopes.com/how-to-use-redis-nodejs/).
+
 ![Redis Commander](./images/redisCommander.gif)
 
 ## Endpoints en springboot
@@ -185,3 +187,12 @@ class MonedaControllerTest {
 ## Cómo testear la aplicación en Insomnia
 
 Te dejamos [el archivo de Insomnia](./Insomnia_Monedas_Redis.json) con ejemplos para probarlo.
+
+## Acceso desde Redis Commander
+
+Desde Redis Commander también podés definir claves manualmente, como por ejemplo una clave con TTL (Time To Leave) para que al cabo de un tiempo la clave deje automáticamente de estar en la cache:
+
+![Redis Commander TTL](./images/redisCommanderTTL.gif)
+
+Para más información podés ver [la lista de comandos disponibles en Redis](https://redis.io/commands/).
+
