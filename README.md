@@ -194,5 +194,9 @@ Desde Redis Commander también podés definir claves manualmente, como por ejemp
 
 ![Redis Commander TTL](./images/redisCommanderTTL.gif)
 
-Para más información podés ver [la lista de comandos disponibles en Redis](https://redis.io/commands/).
+## Links recomendados
 
+- [Lista de comandos disponibles en Redis](https://redis.io/commands/)
+- [Curso de Springboot con Redis](https://developer.redis.com/develop/java/redis-and-spring-course)
+- [Cómo trabajar con diferentes tipos de datos en Redis](https://redis.io/docs/reference/patterns/twitter-clone/)
+- [Caso de uso práctico: Retwis-J, modelando Twitter con Redis](https://docs.spring.io/spring-data/data-keyvalue/examples/retwisj/current/)
