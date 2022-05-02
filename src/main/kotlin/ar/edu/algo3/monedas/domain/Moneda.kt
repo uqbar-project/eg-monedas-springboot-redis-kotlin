@@ -7,7 +7,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
-@RedisHash("Moneda")
+//@RedisHash("Moneda", timeToLive = 60)
+@RedisHash
 class Moneda {
     @JsonIgnore
     lateinit var cotizacionMoneda: BigDecimal

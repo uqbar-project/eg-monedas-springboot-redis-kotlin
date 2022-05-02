@@ -27,8 +27,7 @@ class MonedaControllerTest {
     val mapper = ObjectMapper()
 
     @Test
-    @DisplayName("podemos convertir de una moneda a pesos")
-    fun conversionAPesos() {
+    fun `convertir de una moneda a pesos - caso feliz`() {
         val conversion = Conversion(BigDecimal(10), "Zloty")
         convertir("/monedaAPesos", conversion)
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -36,8 +35,14 @@ class MonedaControllerTest {
     }
 
     @Test
-    @DisplayName("podemos convertir de pesos a una moneda")
-    fun conversionAMoneda() {
+    fun `convertir de una moneda a pesos inexistente da error`() {
+        val conversion = Conversion(BigDecimal(48.02), "patacones")
+        convertir("/monedaAPesos", conversion)
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+    }
+
+    @Test
+    fun `convertir de pesos a una moneda - caso feliz`() {
         val conversion = Conversion(BigDecimal(48.02), "Zloty")
         convertir("/pesosAMoneda", conversion)
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -45,8 +50,7 @@ class MonedaControllerTest {
     }
 
     @Test
-    @DisplayName("no podemos convertir de una moneda inexistente")
-    fun conversionAMonedaInexistente() {
+    fun `convertir de pesos a una moneda inexistente da error`() {
         val conversion = Conversion(BigDecimal(48.02), "patacones")
         convertir("/pesosAMoneda", conversion)
             .andExpect(MockMvcResultMatchers.status().isNotFound)

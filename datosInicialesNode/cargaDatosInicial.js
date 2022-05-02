@@ -13,7 +13,8 @@ import { createClient } from 'redis'
     console.info('connected')
 
     await client.lPop('dolar')
-    await client.rPush('dolar', '62.36', '65.43')
+    await client.rPush('dolar', '62.36')
+    await client.rPush('dolar', '65.43')
     await client.set('real', '13.6')
     await client.set('euro', '69.48')
 
