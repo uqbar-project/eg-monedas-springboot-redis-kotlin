@@ -1,8 +1,13 @@
-import { createClient } from 'redis'
+import {createClient} from 'redis'
 
 (async () => {
 
-    const client = createClient()
+    console.log('CARGANDO MONEDAS ==================================')
+    const client = createClient({
+        socket: {
+            host: 'redis-monedas', port: '6379'
+        }
+    })
     console.info('ejecutando scripts')
 
     client.on('error', (err) => {
