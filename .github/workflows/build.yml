@@ -10,23 +10,23 @@ jobs:
   gradle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install redis
-        run: sudo apt-get install -y redis-tools redis-server
-      - name: Verify that redis is up
-        run: redis-cli ping
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - name: Start Redis
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - uses: actions/setup-java@v3
         with:
-          java-version: 14
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
 
       # Execute Gradle commands in GitHub Actions workflows
-      # => https://github.com/marketplace/actions/gradle-command
-      - uses: eskatos/gradle-command-action@v1
+      - uses: gradle/gradle-build-action@v2
         with:
           arguments: runOnGitHub
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
 
       # Send JaCoCo reports to codecov
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down

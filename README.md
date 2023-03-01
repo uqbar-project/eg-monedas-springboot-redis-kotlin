@@ -2,50 +2,31 @@
 
 [![build](https://github.com/uqbar-project/eg-monedas-springboot-redis-kotlin/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-monedas-springboot-redis-kotlin/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/uqbar-project/eg-monedas-springboot-redis-kotlin/branch/master/graph/badge.svg?token=XWIXvKlnYK)](https://codecov.io/gh/uqbar-project/eg-monedas-springboot-redis-kotlin)
 
-## Levantar Redis localmente
+## Instalación del entorno Redis
 
-Una vez que [instalaste Redis](https://redis.io/download) y lo descargaste en una carpeta, hacés el build local y levantás el server y el cliente en dos terminales diferentes:
-
-```bash
-make
-./src/redis-server
-./src/redis-client  # en otra terminal
-```
-
-## Levantar Redis dockerizado
+Hace falta tener instalado [Docker](https://www.docker.com/). Una vez resuelto este paso abrí una consola de comandos y escribí
 
 ```bash
-docker pull redis
+docker-compose up
 ```
 
-Luego hay que levantar el servicio Redis la primera vez:
+Eso te levanta 
+
+- una base clave/valor en el puerto por defecto (el 6379) 
+- el cliente Redis Commander
+- y por último, ejecuta un [script en Node](./datosInicialesNode/cargaDatosInicial.js) para crear algunas monedas (que no utilizaremos en la aplicación)
+
+Entonces podés ir a un navegador y utilizar el cliente Redis Commander:
 
 ```bash
-docker run --name redis -p 6379:6379 -d redis
+http://localhost:8081/
 ```
-
-Para levantar el servicio una vez que generamos el container simplemente hacemos
-
-```bash
-docker start redis
-```
-
-Y nos podemos conectar a cualquier cliente Redis al host 127.0.0.1, puerto 6379.
-
-## Carga de datos iniciales
-
-Para cargar los datos iniciales, tenés que ejecutar el script que está en Node (asumimos que ya lo tenés instalado):
-
-```bash
-cd datosInicialesNode
-node cargaDatosInicial.js 
-```
-
-Eso te permitirá crear las claves para monedas como euro, dólar y peso y visualizarlas en algún cliente como [Redis Commander](https://github.com/joeferner/redis-commander).
-
-Para más información podés ver [este tutorial](https://flaviocopes.com/how-to-use-redis-nodejs/).
 
 ![Redis Commander](./images/redisCommander.gif)
+
+Les dejamos un diagrama de la arquitectura a alto nivel:
+
+![Arquitectura general de app de monedas](./images/Arq-Monedas-Redis.png)
 
 ## Endpoints en springboot
 
@@ -132,7 +113,7 @@ fun getMonedasAPesos(@RequestBody conversion: Conversion) =
 
 La implementación del service ya la hemos presentado.
 
-Por último, en el archivo `ErrorHandling.xtend` definimos la asociación de la excepción con un código de error http:
+Por último, en el archivo `ErrorHandling.kt` definimos la asociación de la excepción con un código de error http:
 
 ```kt
 @ResponseStatus(HttpStatus.NOT_FOUND)
