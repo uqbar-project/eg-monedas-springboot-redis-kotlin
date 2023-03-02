@@ -1,8 +1,13 @@
-import { createClient } from 'redis'
+import {createClient} from 'redis'
 
 (async () => {
 
-    const client = createClient()
+    console.log('CARGANDO MONEDAS ==================================')
+    const client = createClient({
+        socket: {
+            host: 'redis-monedas', port: '6379'
+        }
+    })
     console.info('ejecutando scripts')
 
     client.on('error', (err) => {
@@ -12,6 +17,7 @@ import { createClient } from 'redis'
     await client.connect()
     console.info('connected')
 
+    await client.del('dolar') // elimina la clave si existe
     await client.lPop('dolar')
     await client.rPush('dolar', '62.36')
     await client.rPush('dolar', '65.43')
