@@ -44,8 +44,10 @@ class Moneda {
     lateinit var descripcion: String
 ```
 
-- `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de valores en Redis
-- `@Id` es el índice interno por el cual vamos a poder recuperar una moneda (ya que la única consulta que tiene sentido es buscar por identificador, si queremos buscar las monedas cuya cotización es mayor a 5 no es Redis la tecnología más apropiada)
+- `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de hashes en Redis, que es un mapa clave/valor
+- `@Id` es el índice interno por el cual vamos a poder recuperar una moneda, por ejemplo "Zloty" o "Rupia india"
+
+![mapeo objetos clave/valor](./images/redisHash.png)
 
 ### Repositorio
 
