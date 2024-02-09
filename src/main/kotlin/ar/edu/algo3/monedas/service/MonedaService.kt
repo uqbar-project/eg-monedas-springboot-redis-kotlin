@@ -14,6 +14,7 @@ class MonedaService {
     @Autowired
     lateinit var monedasRepository: MonedaRepository
 
+    @Transactional(readOnly = true)
     fun getMonedas() = monedasRepository.findAll()
 
     protected fun getMoneda(conversion: Conversion) =

@@ -14,12 +14,12 @@ class MonedasBootstrap : InitializingBean {
     lateinit var monedaRepository: MonedaRepository
 
     fun initMonedas() {
-        crearMoneda("24.01", "Zloty")
-        crearMoneda("1.22", "Rupia india")
-        crearMoneda("6.35", "Florín")
+        crearMoneda(1,"24.01", "Zloty")
+        crearMoneda(2, "1.22", "Rupia india")
+        crearMoneda(3, "6.35", "Florín")
     }
 
-    protected fun crearMoneda(valor: String, descripcionMoneda: String) =
+    protected fun crearMoneda(idMoneda: Int, valor: String, descripcionMoneda: String) =
         monedaRepository.save(Moneda().apply {
             cotizacionMoneda = BigDecimal(valor)
             descripcion = descripcionMoneda
