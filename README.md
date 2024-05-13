@@ -90,30 +90,11 @@ Vamos a definir tres endpoints:
 
 El primer endpoint se implementa con un método GET, los otros dos si bien no tienen efecto colateral, necesitamos pasar cierta información y nos parece mejor hacerla por el body antes que tener que encadenar en la URL todos los valores por query params.
 
-La implementación de la búsqueda de todas las monedas delega a un service de Springboot:
-
-```kt
-@GetMapping("/monedas")
-@ApiOperation("Recupera información de los valores de cada moneda.")
-fun getMonedas() = monedaService.getMonedas()
-```
-
-Tampoco es muy complejo el endpoint de conversión, solo que
+La implementación de la búsqueda de todas las monedas delega a un service de Springboot. Tampoco es muy complejo el endpoint de conversión, solo que
 
 - nos fue útil modelar el service para que busque la moneda y haga la conversión
 - si no encuentra la moneda el service tira un error NotFoundException que se termina mapeando con un código de error de http 404
 - delegamos al objeto de dominio la responsabilidad de la conversión (no olvidarse de dejar que cada objeto cumpla su responsabilidad)
-
-En el controller:
-
-```kt
-@PutMapping("/monedaAPesos")
-@ApiOperation("Convierte un valor de una moneda determinada a pesos. Para conocer la lista de monedas disponibles tenés el endpoint /GET. Se distinguen mayúsculas de minúsculas. Ejemplo: si 1 zloty está 24 pesos, al convertir 10 zlotys obtendremos 240 pesos.")
-fun getMonedasAPesos(@RequestBody conversion: Conversion) =
-    monedaService.convertirMonedaAPesos(conversion)
-```
-
-La implementación del service ya la hemos presentado.
 
 Por último, en el archivo `ErrorHandling.kt` definimos la asociación de la excepción con un código de error http:
 
