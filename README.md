@@ -44,7 +44,7 @@ class Moneda {
     lateinit var descripcion: String
 ```
 
-- `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de hashes en Redis, que es un mapa clave/valor
+- `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de hashes en Redis, que es un mapa clave/valor. También crea un set de valores (útil para el findAll)
 - `@Id` es el índice interno por el cual vamos a poder recuperar una moneda, por ejemplo "Zloty" o "Rupia india"
 
 ![mapeo objetos clave/valor](./images/redisHash.png)
