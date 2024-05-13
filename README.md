@@ -108,7 +108,7 @@ class UserException(override val message: String) : RuntimeException(message)
 
 ### Testeo de integración
 
-Levantar el servicio de Redis antes de ejecutar los tests de integración, algo que también hacemos en el build del CI. 
+Tenemos que levantar el servicio de Redis antes de ejecutar los tests de integración, algo que también hacemos en el build del CI. 
 
 Los casos de prueba son:
 
