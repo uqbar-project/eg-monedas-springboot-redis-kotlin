@@ -148,9 +148,13 @@ class MonedaControllerTest {
     }
 ```
 
-## Cómo testear la aplicación en Insomnia
+## Cómo testear la aplicación
 
-Te dejamos [el archivo de Insomnia](./Insomnia_Monedas_Redis.json) con ejemplos para probarlo.
+Te dejamos ejemplos para
+
+- [Bruno](./Monedas_Bruno.json)
+- [Insomnia](./Monedas_Insomnia.json)
+- [Postman](./Monedas_Postman.json)
 
 ## Acceso desde Redis Commander
 

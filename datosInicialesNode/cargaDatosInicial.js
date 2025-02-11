@@ -19,8 +19,8 @@ import {createClient} from 'redis'
 
     await client.del('dolar') // elimina la clave si existe
     await client.lPop('dolar')
-    await client.rPush('dolar', '62.36')
-    await client.rPush('dolar', '65.43')
+    await client.lPush('dolar', '62.36')
+    await client.lPush('dolar', '65.43')
     await client.set('real', '13.6')
     await client.set('euro', '69.48')
 
