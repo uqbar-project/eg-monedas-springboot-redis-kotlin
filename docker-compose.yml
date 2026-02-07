@@ -7,6 +7,7 @@ services:
       - "6379:6379"
 
   redis-commander:
+    platform: linux/amd64
     container_name: redis-commander-monedas
     hostname: redis-commander
     image: rediscommander/redis-commander:latest

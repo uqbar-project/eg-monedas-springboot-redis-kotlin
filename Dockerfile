@@ -1,4 +1,4 @@
-FROM node:19
+FROM node:22
 
 # We have to install nodemon globally before moving into the working directory
 RUN npm install -g nodemon
@@ -14,6 +14,6 @@ COPY datosInicialesNode/cargaDatosInicial.js ./
 RUN npm install
 
 # Bundle app source
-COPY . .
+# COPY . .
 
 EXPOSE 8080
