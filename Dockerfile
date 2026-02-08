@@ -14,6 +14,6 @@ COPY datosInicialesNode/cargaDatosInicial.js ./
 RUN npm install
 
 # Bundle app source
-# COPY . .
+COPY . .
 
 EXPOSE 8080
