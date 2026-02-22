@@ -1,20 +1,20 @@
 services:
-  redis:
+  redis-monedas:
     container_name: redis-monedas
     hostname: redis
-    image: redis
+    image: redis:7
     ports:
       - "6379:6379"
 
-  redis-commander:
-    container_name: redis-commander-monedas
-    hostname: redis-commander
-    image: rediscommander/redis-commander:latest
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:redis:6379
+  redisinsight:
+    container_name: redis-insight-monedas
+    image: redis/redisinsight:latest
     ports:
-      - "8081:8081"
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/data
+    depends_on:
+      - redis-monedas
 
   app:
     build: .
@@ -22,5 +22,8 @@ services:
       - .:/usr/src/app
     container_name: redis-node-monedas
     ports:
-      - 4026:8080
+      - "4026:8080"
     command: node datosInicialesNode/cargaDatosInicial.js
+
+volumes:
+  redisinsight-data:

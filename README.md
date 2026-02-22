@@ -13,20 +13,26 @@ docker compose up
 Eso te levanta 
 
 - una base clave/valor en el puerto por defecto (el 6379) 
-- el cliente Redis Commander
+- el cliente Redis Insight
 - y por último, ejecuta un [script en Node](./datosInicialesNode/cargaDatosInicial.js) para crear algunas monedas (que no utilizaremos en la aplicación)
 
-Entonces podés ir a un navegador y utilizar el cliente Redis Commander:
+Entonces podés ir a un navegador y utilizar el cliente Redis Insight:
 
 ```bash
-http://localhost:8081/
+http://localhost:5540/
 ```
 
-![Redis Commander](./images/redisCommander.gif)
+Agregá una conexión a `redis://default@redis:6379` (podés testearla en el link "Test connection").
+
+![Redis Insight connection](./images/RedisInsightConnection.png)
+
+Después de hacer click sobre "Add Database" te conectás y ves las claves y valores:
+
+![Redis Insight demo](./images/RedisInsightDemo.png)
 
 Les dejamos un diagrama de la arquitectura a alto nivel:
 
-![Arquitectura general de app de monedas](./images/Arq-Monedas-Redis.png)
+![Arquitectura general de app de monedas](./images/Monedas-Redis.drawio.png)
 
 ## Endpoints en springboot
 

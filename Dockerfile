@@ -1,19 +1,19 @@
-FROM node:19
+FROM node:22
 
-# We have to install nodemon globally before moving into the working directory
-RUN npm install -g nodemon
+# Activar Corepack (viene con Node)
+RUN corepack enable
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY datosInicialesNode/package*.json ./
-COPY datosInicialesNode/cargaDatosInicial.js ./
+# Copiás solo los manifests
+COPY datosInicialesNode/package.json datosInicialesNode/pnpm-lock.yaml ./
 
-RUN npm install
+# Instalar dependencias con pnpm
+RUN pnpm install --frozen-lockfile
 
-# Bundle app source
+# Copiás el resto
 COPY . .
 
 EXPOSE 8080
+
+CMD ["node", "datosInicialesNode/cargaDatosInicial.js"]
