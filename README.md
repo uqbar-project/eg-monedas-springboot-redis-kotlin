@@ -53,7 +53,7 @@ class Moneda {
 - `@RedisHash` es la clave que va a agrupar todos los objetos Moneda en una lista de hashes en Redis, que es un mapa clave/valor. También crea un set de valores (útil para el findAll)
 - `@Id` es el índice interno por el cual vamos a poder recuperar una moneda, por ejemplo "Zloty" o "Rupia india"
 
-![mapeo objetos clave/valor](./images/redisHash.png)
+![Redis Insight Mapeo Objetos clave/valor](./images/hashForCurrency.png)
 
 ### Repositorio
 
@@ -63,11 +63,11 @@ La interfaz que propone Spring boot con Redis es idéntica a la del modelo relac
 interface MonedaRepository : CrudRepository<Moneda, String> {}
 ```
 
-Como la interfaz ya propone `findAll` y `findById` que es lo que queremos hacer, no tenemos que definir mensajes adicionales.
+Como la interfaz ya trae `findAll` y `findById` que es lo que queremos hacer, no tenemos que definir mensajes adicionales.
 
 ### Service
 
-El service define dos métodos de conversión:
+El service tiene dos métodos de conversión:
 
 ```kt
 protected fun getMoneda(conversion: Conversion) =
@@ -90,7 +90,7 @@ La anotación `@Transactional(readOnly = true)` indica al service que no debe in
 
 Vamos a definir tres endpoints:
 
-- uno que permita conocer todas las monedas
+- uno que permita conocer todas las monedas (usando la clave definida como SET: `ar.edu.algo3.monedas.domain.Moneda`)
 - otro que convierta de pesos a una moneda en cuestión
 - y otro que convierta de la moneda en cuestión a pesos
 
@@ -166,7 +166,7 @@ Te dejamos ejemplos para
 
 Desde Redis Commander también podés definir claves manualmente, como por ejemplo una clave con TTL (Time To Leave) para que al cabo de un tiempo la clave deje automáticamente de estar en la cache:
 
-![Redis Commander TTL](./images/redisCommanderTTL.gif)
+![Redis Commander TTL](./images/RedisInsightTTL.gif)
 
 ## Links recomendados
 
