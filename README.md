@@ -162,11 +162,15 @@ Te dejamos ejemplos para
 - [Insomnia](./Monedas_Insomnia.json)
 - [Postman](./Monedas_Postman.json)
 
-## Acceso desde Redis Commander
+## Acceso desde Redis Insight
 
-Desde Redis Commander también podés definir claves manualmente, como por ejemplo una clave con TTL (Time To Leave) para que al cabo de un tiempo la clave deje automáticamente de estar en la cache:
+Desde Redis Insight también podés definir claves manualmente, como por ejemplo una clave con TTL (Time To Leave) para que al cabo de un tiempo la clave deje automáticamente de estar en la cache:
 
 ![Redis Commander TTL](./images/RedisInsightTTL.gif)
+
+También la podés manipular visualmente:
+
+![TTL Manual](./images/RedisInsightTTLManual.png)
 
 ## Links recomendados
 
